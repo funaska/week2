@@ -68,7 +68,7 @@ def main():
     dp.add_handler(CommandHandler("planet", planet_to_const))
     dp.add_handler(CommandHandler("wordcount", word_count))
     dp.add_handler(MessageHandler(Filters.text, calculation))
-    dp.add_handler(MessageHandler(Filters.text, talk_to_me))
+    # dp.add_handler(MessageHandler(Filters.text, talk_to_me))
     mybot.start_polling()
     mybot.idle()
 
