@@ -23,7 +23,7 @@ def greet_user(bot, update):
 def talk_to_me(bot, update):
     user_text = update.message.text
     print('Пользователь написал: ' + user_text)
-    update.message.reply_text('Ваше обращение будет обработано')
+    update.message.reply_text('Не понял, ещё раз?')
 
 def planet_to_const(bot, update):
     planet = update.message.text.split()[1]
@@ -37,17 +37,26 @@ def planet_to_const(bot, update):
 
 def word_count(bot,update):
     input_text = update.message.text[11:]
-    user_words = input_text.split()
+    user_words = input_text.strip().split()
     # print(input_text)
-    if len(user_words) > 0 and input_text[0] == '"' and input_text[-1] == '"':
-        word_quantity = len(user_words)
-        result_text = ''
-        for words in user_words:
-            result_text += ' ' + words
-            # print(result_text)
-        update.message.reply_text('В тексте' + result_text + ' ' + str(word_quantity) + ' слова')
+    user_words_len = len(user_words)
+    if user_words_len > 0 and input_text[0] == '"' and input_text[-1] == '"':
+        word_quantity = user_words_len
+        result_text = " ".join(user_words)
+        # print(result_text)
+        update.message.reply_text('В тексте ' + result_text + ' ' + str(word_quantity) + ' слова')
     else:
         update.message.reply_text('Было бы что считать... (не забывайте оборачивать текст в двойные кавычки)')
+
+def calculation(bot,update):
+    potentially_example = update.message.text
+    # print(potentially_example[:-1])
+    if potentially_example[-1] == '=':
+        # print( eval(potentially_example[:-1]) )
+        answer = eval(potentially_example[:-1])
+        update.message.reply_text(potentially_example + str(answer) )
+    else:
+        talk_to_me(bot,update)
 
 # -----------------------------------------------------------------------------
 # Функция, которая соединяется с платформой Telegram, "тело" нашего бота
@@ -58,6 +67,7 @@ def main():
     dp.add_handler(CommandHandler("start", greet_user))
     dp.add_handler(CommandHandler("planet", planet_to_const))
     dp.add_handler(CommandHandler("wordcount", word_count))
+    dp.add_handler(MessageHandler(Filters.text, calculation))
     dp.add_handler(MessageHandler(Filters.text, talk_to_me))
     mybot.start_polling()
     mybot.idle()
