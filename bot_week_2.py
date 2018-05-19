@@ -20,6 +20,11 @@ def greet_user(bot, update):
     update.message.reply_text(text)
     # print('Привет!')
 
+def talk_to_me(bot, update):
+    user_text = update.message.text
+    print('Пользователь написал: ' + user_text)
+    update.message.reply_text('Ваше обращение будет обработано')
+
 def planet_to_const(bot, update):
     planet = update.message.text.split()[1]
     print('Пользователь хочет узнать про планету: ' + planet)
@@ -31,14 +36,20 @@ def planet_to_const(bot, update):
         update.message.reply_text('Не знаю такой планеты (')
 
 def word_count(bot,update):
-    user_words = update.message.text
-    update.message.reply_text('Вы написали слова: \n' + user_words)
+    input_text = update.message.text[11:]
+    user_words = input_text.split()
+    # print(input_text)
+    if len(user_words) > 0 and input_text[0] == '"' and input_text[-1] == '"':
+        word_quantity = len(user_words)
+        result_text = ''
+        for words in user_words:
+            result_text += ' ' + words
+            # print(result_text)
+        update.message.reply_text('В тексте' + result_text + ' ' + str(word_quantity) + ' слова')
+    else:
+        update.message.reply_text('Было бы что считать... (не забывайте оборачивать текст в двойные кавычки)')
 
-def talk_to_me(bot, update):
-    user_text = update.message.text
-    print('Пользователь написал: ' + user_text)
-    update.message.reply_text('Ваше обращение будет обработано')
-
+# -----------------------------------------------------------------------------
 # Функция, которая соединяется с платформой Telegram, "тело" нашего бота
 def main():
     mybot = Updater(secret_key, request_kwargs=PROXY)
